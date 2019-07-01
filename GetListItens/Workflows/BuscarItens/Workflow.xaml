@@ -1,0 +1,191 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="GetListItens.Workflows.Buscar_itens_de_lista.Workflow" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="GetListItens.Workflows.Buscar_itens_de_lista.Workflow_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:p="http://schemas.microsoft.com/workflow/2012/07/xaml/activities"
+ xmlns:p1="wf://workflow.windows.net/$Activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:sn="clr-namespace:System.Net;assembly=System"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>Microsoft.Activities</x:String>
+      <x:String>System.Net</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities.Design</AssemblyReference>
+      <AssemblyReference>Microsoft.SharePoint.DesignTime.Activities.16.0</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>GetListItens</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="webURI" />
+      <Variable x:TypeArguments="sn:HttpStatusCode" Name="ResponseStatusCode" />
+      <Variable x:TypeArguments="p:DynamicValue" Name="ResponseContent" />
+      <Variable x:TypeArguments="p:DynamicValue" Name="resultsDV" />
+      <Variable x:TypeArguments="x:Int32" Name="totalItens" />
+      <Variable x:TypeArguments="p:DynamicValue" Name="ResponseHeader" />
+    </Sequence.Variables>
+    <p1:WebUri sap2010:Annotation.AnnotationText="Retorna o URI do web" sap2010:WorkflowViewState.IdRef="WebUri_1">
+      <p1:WebUri.Result>
+        <OutArgument x:TypeArguments="x:String">
+          <mca:CSharpReference x:TypeArguments="x:String">webURI</mca:CSharpReference>
+        </OutArgument>
+      </p1:WebUri.Result>
+    </p1:WebUri>
+    <p:HttpSend sap2010:WorkflowViewState.IdRef="HttpSend_1" Method="GET">
+      <p:HttpSend.RequestHeaders>
+        <InArgument x:TypeArguments="p:DynamicValue">
+          <p:SetDynamicValueProperties>
+            <scg:Dictionary x:TypeArguments="x:String, InArgument">
+              <InArgument x:TypeArguments="x:String" x:Key="Accept">application/json;odata=verbose</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="Content-Type">application/json;odata=verbose</InArgument>
+            </scg:Dictionary>
+          </p:SetDynamicValueProperties>
+        </InArgument>
+      </p:HttpSend.RequestHeaders>
+      <p:HttpSend.ResponseContent>
+        <OutArgument x:TypeArguments="p:DynamicValue">
+          <mca:CSharpReference x:TypeArguments="p:DynamicValue">ResponseContent</mca:CSharpReference>
+        </OutArgument>
+      </p:HttpSend.ResponseContent>
+      <p:HttpSend.ResponseHeaders>
+        <OutArgument x:TypeArguments="p:DynamicValue">
+          <mca:CSharpReference x:TypeArguments="p:DynamicValue">ResponseHeader</mca:CSharpReference>
+        </OutArgument>
+      </p:HttpSend.ResponseHeaders>
+      <p:HttpSend.ResponseStatusCode>
+        <OutArgument x:TypeArguments="sn:HttpStatusCode">
+          <mca:CSharpReference x:TypeArguments="sn:HttpStatusCode">ResponseStatusCode</mca:CSharpReference>
+        </OutArgument>
+      </p:HttpSend.ResponseStatusCode>
+      <p:HttpSend.Uri>
+        <InArgument x:TypeArguments="x:String">
+          <mca:CSharpValue x:TypeArguments="x:String">$"{webURI}/_api/web/lists/GetByTitle('detalhesCadastro')/items?$select=Title"</mca:CSharpValue>
+        </InArgument>
+      </p:HttpSend.Uri>
+    </p:HttpSend>
+    <p:GetODataProperties DisplayName="GetDynamicValueProperties" sap2010:WorkflowViewState.IdRef="GetODataProperties_1">
+      <p:GetODataProperties.Source>
+        <InArgument x:TypeArguments="p:DynamicValue">
+          <mca:CSharpValue x:TypeArguments="p:DynamicValue">ResponseContent</mca:CSharpValue>
+        </InArgument>
+      </p:GetODataProperties.Source>
+      <scg:Dictionary x:TypeArguments="x:String, OutArgument">
+        <OutArgument x:TypeArguments="p:DynamicValue" x:Key="d/results">
+          <mca:CSharpReference x:TypeArguments="p:DynamicValue">resultsDV</mca:CSharpReference>
+        </OutArgument>
+      </scg:Dictionary>
+    </p:GetODataProperties>
+    <p:CountDynamicValueItems sap2010:WorkflowViewState.IdRef="CountDynamicValueItems_1">
+      <p:CountDynamicValueItems.Result>
+        <OutArgument x:TypeArguments="x:Int32">
+          <mca:CSharpReference x:TypeArguments="x:Int32">totalItens</mca:CSharpReference>
+        </OutArgument>
+      </p:CountDynamicValueItems.Result>
+      <InArgument x:TypeArguments="p:DynamicValue">
+        <mca:CSharpValue x:TypeArguments="p:DynamicValue">resultsDV</mca:CSharpValue>
+      </InArgument>
+    </p:CountDynamicValueItems>
+    <p1:WriteToHistory sap2010:WorkflowViewState.IdRef="WriteToHistory_2">
+      <p1:WriteToHistory.Message>
+        <InArgument x:TypeArguments="x:String">
+          <mca:CSharpValue x:TypeArguments="x:String">$"Código de resposta: {ResponseStatusCode} \n Total de itens na lista: {totalItens}"</mca:CSharpValue>
+        </InArgument>
+      </p1:WriteToHistory.Message>
+    </p1:WriteToHistory>
+    <ForEach x:TypeArguments="p:DynamicValue" DisplayName="ForEach&lt;DynamicValue&gt;" sap2010:WorkflowViewState.IdRef="ForEach`1_1">
+      <ForEach.Values>
+        <InArgument x:TypeArguments="scg:IEnumerable(p:DynamicValue)">
+          <mca:CSharpValue x:TypeArguments="scg:IEnumerable(p:DynamicValue)">resultsDV</mca:CSharpValue>
+        </InArgument>
+      </ForEach.Values>
+      <ActivityAction x:TypeArguments="p:DynamicValue">
+        <ActivityAction.Argument>
+          <DelegateInArgument x:TypeArguments="p:DynamicValue" Name="item" />
+        </ActivityAction.Argument>
+        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <Sequence.Variables>
+            <Variable x:TypeArguments="x:String" Name="itemTitle" />
+          </Sequence.Variables>
+          <p:GetDynamicValueProperty x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="GetDynamicValueProperty`1_1" PropertyName="Title">
+            <p:GetDynamicValueProperty.Result>
+              <OutArgument x:TypeArguments="x:String">
+                <mca:CSharpReference x:TypeArguments="x:String">itemTitle</mca:CSharpReference>
+              </OutArgument>
+            </p:GetDynamicValueProperty.Result>
+            <p:GetDynamicValueProperty.Source>
+              <InArgument x:TypeArguments="p:DynamicValue">
+                <mca:CSharpValue x:TypeArguments="p:DynamicValue">item</mca:CSharpValue>
+              </InArgument>
+            </p:GetDynamicValueProperty.Source>
+          </p:GetDynamicValueProperty>
+          <p1:WriteToHistory sap2010:WorkflowViewState.IdRef="WriteToHistory_3">
+            <p1:WriteToHistory.Message>
+              <InArgument x:TypeArguments="x:String">
+                <mca:CSharpValue x:TypeArguments="x:String">itemTitle</mca:CSharpValue>
+              </InArgument>
+            </p1:WriteToHistory.Message>
+          </p1:WriteToHistory>
+        </Sequence>
+      </ActivityAction>
+    </ForEach>
+    <sads:DebugSymbol.Symbol>d2VFOlxKRUFOXFRyZWluYW1lbnRvc1xTaGFyZVBvaW50IDIwMTNcR2V0TGlzdEl0ZW5zLVYyXEdldExpc3RJdGVuc1xXb3JrZmxvd3NcQnVzY2FySXRlbnNcV29ya2Zsb3cueGFtbB0rA50BDgIBATQFOhECAXA7BVoSAgFPWwVmHAIBQGcFcCACATFxBXcZAgEpeAWbAQ8CAQI3CzdXAgFxPgtDKQIBbVILUmwCAWZXC1eWAQIBX0gLSGYCAVhNC01lAgFRO0U7SgIBUGMLY2ACAUheC15eAgFBagtqWgIBOW4JblYCATJ0C3SdAQIBKnsLe2kCASKCAQmZARQCAQNARUBjAgFvQUtBaQIBboYBC5EBJwIBDpIBC5gBHwIBBIkBEYkBYAIBGY4BEY4BWQIBEIYBjAGGAZMBAgEPlQERlQFYAgEF</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="WebUri_1" sap:VirtualizedContainerService.HintSize="287.2,68.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="HttpSend_1" sap:VirtualizedContainerService.HintSize="287.2,62.4" />
+      <sap2010:ViewStateData Id="GetODataProperties_1" sap:VirtualizedContainerService.HintSize="287.2,92.8" />
+      <sap2010:ViewStateData Id="CountDynamicValueItems_1" sap:VirtualizedContainerService.HintSize="287.2,22.4" />
+      <sap2010:ViewStateData Id="WriteToHistory_2" sap:VirtualizedContainerService.HintSize="287.2,68.8" />
+      <sap2010:ViewStateData Id="GetDynamicValueProperty`1_1" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="WriteToHistory_3" sap:VirtualizedContainerService.HintSize="200,68.8" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="222.4,256">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="287.2,407.2" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="309.6,1047.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GetListItens.Workflows.Buscar_itens_de_lista.Workflow_1" sap:VirtualizedContainerService.HintSize="349.6,1127.2" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>
